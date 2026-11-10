@@ -142,3 +142,28 @@ def test_add_two_tasks(page: Page):
     expect(task_items.locator("label")).to_have_text(
         ["Read the instructions", "Practise the examples"]
     )
+
+def test_active_filter_shows_unfinished_task(page: Page):
+    page.goto(URL)
+
+    # Add two tasks
+    add_task(page, "Task One")
+    add_task(page, "Task Two")
+
+    # Mark Task One as completed
+    task_items = page.locator(".todo-list li")
+    task_items.nth(0).locator(".toggle").click()
+
+    # Click the Active filter
+    page.get_by_role("link", name="Active").click()
+
+    # Verify only unfinished task is displayed
+    expect(task_items).to_have_count(1)
+    expect(task_items.locator("label")).to_have_text(
+        ["Task Two"]
+    )
+
+    page.screenshot(
+        path="docs/evidence/member-2/active-filter.png",
+        full_page=True,
+    )
