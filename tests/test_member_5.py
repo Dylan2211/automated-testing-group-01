@@ -124,3 +124,45 @@ def test_add_two_tasks(page: Page):
     expect(task_items.locator("label")).to_have_text(
         ["Read the instructions", "Practise the examples"]
     )
+
+
+def test_refresh_keeps_tasks(page: Page):
+    page.goto(URL)
+    task_items = page.locator(".todo-list li")
+    task_labels = task_items.locator("label")
+
+    expect(task_items).to_have_count(0)
+
+    add_task(page, "Buy groceries")
+    add_task(page, "Book a library room")
+
+    expect(task_items).to_have_count(2)
+
+    page.reload()
+
+    expect(task_items).to_have_count(2)
+    expect(task_labels).to_have_text(["Buy groceries", "Book a library room"])
+
+    page.screenshot(
+        path="docs/evidence/member-5/extra-test-1-refresh-keeps-tasks.png",
+        full_page=True,
+    )
+
+
+def test_login_with_incorrect_username(page: Page):
+    page.goto("https://the-internet.herokuapp.com/login")
+
+    page.get_by_label("Username").fill("notauser")
+    page.get_by_label("Password").fill("SuperSecretPassword!")
+    page.get_by_role("button", name="Login").click()
+
+    expect(page.locator("#flash")).to_contain_text("Your username is invalid!")
+    expect(page).to_have_url("https://the-internet.herokuapp.com/login")
+    expect(
+        page.get_by_role("heading", name="Secure Area", exact=True)
+    ).not_to_be_visible()
+
+    page.screenshot(
+        path="docs/evidence/member-5/extra-test-2-wrong-username.png",
+        full_page=True,
+    )
