@@ -78,6 +78,10 @@ def test_blank_task_is_not_added(page: Page, task_text: str):
     task_input.press("Enter")
 
     expect(task_items).to_have_count(0)
+    
+    
+    
+# login test
 
 def test_login_with_correct_details(page: Page):
     page.goto("https://the-internet.herokuapp.com/login")
@@ -93,7 +97,9 @@ def test_login_with_correct_details(page: Page):
             exact=True,
         )
     ).to_be_visible()
-
+    
+    
+# incorrect password test
 
 def test_login_with_incorrect_password(page: Page):
     page.goto("https://the-internet.herokuapp.com/login")
@@ -109,3 +115,34 @@ def test_login_with_incorrect_password(page: Page):
     expect(
         page.get_by_role("button", name="Login")
     ).to_be_visible()
+    
+    
+    
+#
+
+def add_task(page: Page, task_name: str):
+    task_input = page.get_by_placeholder(
+        "What needs to be done?",
+        exact=True,
+    )
+    task_input.fill(task_name)
+    task_input.press("Enter")
+    
+    
+    
+#
+
+def test_add_two_tasks(page: Page):
+    page.goto(URL)
+    task_items = page.locator(".todo-list li")
+
+    expect(task_items).to_have_count(0)
+
+    add_task(page, "Read the instructions")
+    add_task(page, "Practise the examples")
+
+    expect(task_items).to_have_count(2)
+    expect(task_items.locator("label")).to_have_text(
+        ["Read the instructions", "Practise the examples"]
+    )
+    
