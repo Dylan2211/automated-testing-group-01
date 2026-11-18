@@ -44,6 +44,7 @@ def test_add_two_tasks(page: Page):
     expect(task_items.locator("label")).to_have_text(
         ["Read the instructions", "Practise the examples"]
     )
+
 def test_complete_task(page: Page):
     page.goto(URL)
 
@@ -123,7 +124,6 @@ def test_login_with_incorrect_password(page: Page):
         page.get_by_role("button", name="Login")
     ).to_be_visible()
 
-
 def test_save_edit_with_enter(page: Page):
     page.goto(URL)
     task_input = page.get_by_placeholder(
@@ -151,7 +151,6 @@ def test_save_edit_with_enter(page: Page):
     path="docs/evidence/member-1/extra-test-1-save_edit_with_enter.png",
     full_page=True,
 )
-
 
 def test_completed_filter_with_mixed_items(page: Page):
     page.goto(URL)
