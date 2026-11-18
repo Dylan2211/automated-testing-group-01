@@ -17,8 +17,9 @@ def add_task(page: Page, task_name: str):
     )
     task_input.fill(task_name)
     task_input.press("Enter")
+
 def test_add_two_tasks(page: Page):
-    page.goto(URL)
+    page.goto("https://demo.playwright.dev/todomvc/#/")
     task_items = page.locator(".todo-list li")
 
     expect(task_items).to_have_count(0)
@@ -30,3 +31,13 @@ def test_add_two_tasks(page: Page):
     expect(task_items.locator("label")).to_have_text(
         ["Read the instructions", "Practise the examples"]
     )
+
+def test_enter_makes_new_task(page: Page):
+    page.goto("https://demo.playwright.dev/todomvc/#/")
+    page.get_by_role("textbox", name="What needs to be done?").click()
+
+    # Add your setup and actions.
+
+    # Add meaningful assertions.
+
+    # Capture your final PNG after the assertions.
