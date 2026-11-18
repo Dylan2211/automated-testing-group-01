@@ -76,6 +76,7 @@ def test_complete_task(page: Page):
     ["", " ", "   "],
     ids=["empty", "one-space", "three-spaces"],
 )
+
 def test_blank_task_is_not_added(page: Page, task_text: str):
     page.goto(URL)
 
@@ -121,3 +122,64 @@ def test_login_with_incorrect_password(page: Page):
     expect(
         page.get_by_role("button", name="Login")
     ).to_be_visible()
+
+
+def test_save_edit_with_enter(page: Page):
+    page.goto(URL)
+    task_input = page.get_by_placeholder(
+        "What needs to be done?",
+        exact=True,
+    )
+    task_items = page.locator(".todo-list li")
+
+    expect(task_items).to_have_count(0)
+
+    task_input.fill("Original Task")
+    task_input.press("Enter")
+
+    expect(task_items).to_have_count(1)
+
+    task_label = task_items.first.locator("label")
+    task_label.dblclick()
+
+    edit_input = task_items.first.get_by_role("textbox")
+    edit_input.fill("Edited Task")
+    edit_input.press("Enter")
+
+    expect(task_label).to_have_text("Edited Task")
+    page.screenshot(
+    path="docs/evidence/member-1/extra-test-1-save_edit_with_enter.png",
+    full_page=True,
+)
+
+
+def test_completed_filter_with_mixed_items(page: Page):
+    page.goto(URL)
+    task_input = page.get_by_placeholder(
+        "What needs to be done?",
+        exact=True,
+    )
+    task_items = page.locator(".todo-list li")
+
+    expect(task_items).to_have_count(0)
+
+    task_input.fill("Task 1 (Checked)")
+    task_input.press("Enter")
+
+    task_input.fill("Task 2")
+    task_input.press("Enter")
+
+    expect(task_items).to_have_count(2)
+
+    checkbox = task_items.first.get_by_role("checkbox")
+    checkbox.check()
+    expect(checkbox).to_be_checked()
+
+    page.get_by_role("link", name="Completed", exact=True).click()
+
+    expect(task_items).to_have_count(1)
+    expect(task_items.locator("label")).to_have_text(["Task 1 (Checked)"])
+    page.screenshot(
+    path="docs/evidence/member-1/extra-test-2-completed_filter_with_mixed_items.png",
+    full_page=True,
+)
