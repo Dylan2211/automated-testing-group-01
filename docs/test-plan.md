@@ -9,7 +9,7 @@ Cosmetic changes to copied code are not sufficient.
 | 1 | | | `docs/evidence/member-1/` |
 | 2 | | | `docs/evidence/member-2/` |
 | 3 | | | `docs/evidence/member-3/` |
-| 4, if present | | | `docs/evidence/member-4/` |
+| 4, if present | Delete an active task | Clear completed tasks from a mixed list | `docs/evidence/member-4/` |
 | 5, if present | | | `docs/evidence/member-5/` |
 
 ## Unavoidable repeats, if any
