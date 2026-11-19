@@ -104,6 +104,89 @@ def test_login_with_incorrect_password(page: Page):
         page.get_by_role("button", name="Login")
     ).to_be_visible()
 
+def add_task(page: Page, task_name: str):
+    task_input = page.get_by_placeholder(
+        "What needs to be done?",
+        exact=True,
+    )
+    task_input.fill(task_name)
+    task_input.press("Enter")
 
-#@python -m pytest tests/test_member_3.py --browser-channel %TEST_BROWSER% --headed --output test-results/member-3/current-run --screenshot on --junitxml=reports/member-3/results.xml --html=reports/member-3/results.html --self-contained-html
+def test_add_two_tasks(page: Page):
+    page.goto(URL)
+    task_items = page.locator(".todo-list li")
+
+    expect(task_items).to_have_count(0)
+
+    add_task(page, "Read the instructions")
+    add_task(page, "Practise the examples")
+
+    expect(task_items).to_have_count(2)
+    expect(task_items.locator("label")).to_have_text(
+        ["Read the instructions", "Practise the examples"]
+    )
+
+def test_complete_all_tasks(page: Page):
+    page.goto(URL)
+
+    task_input = page.get_by_placeholder(
+        "What needs to be done?",
+        exact=True,
+    )
+    task_items = page.locator(".todo-list li")
+
+    expect(task_items).to_have_count(0)
+
+    task_input.fill("Practise automated testing")
+    task_input.press("Enter")
+    task_input.fill("Practise automated testing 2")
+    task_input.press("Enter")
+    task_input.fill("Practise automated testing 3")
+    task_input.press("Enter")
+
+    expect(task_items).to_have_count(3)
+
+    page.get_by_label("Mark all as complete").check()
+    expect(page.locator(".todo-list li.completed")).to_have_count(3)
+
+    page.get_by_role("link", name="Completed", exact=True).click()
+
+    expect(task_items).to_have_count(3)
+    expect(task_items.locator("label")).to_have_text(
+        ["Practise automated testing", "Practise automated testing 2", "Practise automated testing 3"]
+    )
+
+def test_uncomplete_all_tasks(page: Page):
+    page.goto(URL)
+
+    task_input = page.get_by_placeholder(
+        "What needs to be done?",
+        exact=True,
+    )
+    task_items = page.locator(".todo-list li")
+
+    expect(task_items).to_have_count(0)
+
+    task_input.fill("Practise automated testing")
+    task_input.press("Enter")
+    task_input.fill("Practise automated testing 2")
+    task_input.press("Enter")
+    task_input.fill("Practise automated testing 3")
+    task_input.press("Enter")
+
+    expect(task_items).to_have_count(3)
+
+    page.get_by_label("Mark all as complete").check()
+    expect(page.locator(".todo-list li.completed")).to_have_count(3)
+    page.get_by_label("Mark all as complete").uncheck()
+    expect(page.locator(".todo-list li.completed")).to_have_count(0)
+    expect(page.locator(".todo-list li:not(.completed)")).to_have_count(3)
+
+    page.get_by_role("link", name="Completed", exact=True).click()
+
+    expect(task_items).to_have_count(0)
+
+#python -m pytest tests/test_member_3.py --browser-channel %TEST_BROWSER% --headed --output test-results/member-3/current-run --screenshot on --junitxml=reports/member-3/results.xml --html=reports/member-3/results.html --self-contained-html
 #python -m pytest tests/test_member_3.py::test_login_with_correct_details --browser-channel %TEST_BROWSER% --headed --slowmo 300 --output test-results/member-3/current-run --screenshot on --junitxml=reports/member-3/results.xml --html=reports/member-3/results.html --self-contained-html
+#python -m pytest tests/test_member_3.py::test_complete_all_tasks --browser-channel %TEST_BROWSER% --headed --slowmo 300 --output test-results/member-3/current-run --screenshot on --junitxml=reports/member-3/results.xml --html=reports/member-3/results.html --self-contained-html
+#python -m pytest tests/test_member_3.py::test_uncomplete_all_tasks --browser-channel %TEST_BROWSER% --headed --slowmo 300 --output test-results/member-3/current-run --screenshot on --junitxml=reports/member-3/results.xml --html=reports/member-3/results.html --self-contained-html
