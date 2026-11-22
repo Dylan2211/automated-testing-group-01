@@ -146,7 +146,7 @@ def test_active_filter_shows_unfinished_task(page: Page):
 
 from playwright.sync_api import Page, expect
 
-URL = "https://playwright.dev"
+URL = "https://demo.playwright.dev/todomvc/"
 
 def add_task(page: Page, task_name: str):
     task_input = page.get_by_placeholder(
