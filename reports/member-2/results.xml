@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="1" skipped="0" tests="1" time="12.513" timestamp="2026-11-10T15:32:00.711811+08:00" hostname="Bhaveesh"><testcase classname="tests.test_member_2" name="test_blank_task_is_not_added[chromium-empty]" time="9.919"><failure message="playwright._impl._errors.TargetClosedError: Locator.fill: Target page, context or browser has been closed&#10;Call log:&#10;  - waiting for get_by_placeholder(&quot;What needs to be done?&quot;, exact=True)">page = &lt;Page url='https://playwright.dev/'&gt;, task_text = ''
+
+    @pytest.mark.parametrize(
+        "task_text",
+        ["", " ", "   "],
+        ids=["empty", "one-space", "three-spaces"],
+    )
+    def test_blank_task_is_not_added(page: Page, task_text: str):
+        page.goto(URL)
+    
+        task_input = page.get_by_placeholder(
+            "What needs to be done?",
+            exact=True,
+        )
+        task_items = page.locator(".todo-list li")
+    
+        expect(task_items).to_have_count(0)
+    
+&gt;       task_input.fill(task_text)
+
+tests\test_member_2.py:19: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+..\..\AppData\Local\Python\pythoncore-3.15-64\Lib\site-packages\playwright\sync_api\_generated.py:11664: in fill
+    self._sync(
+..\..\AppData\Local\Python\pythoncore-3.15-64\Lib\site-packages\playwright\_impl\locator.py:352: in fill
+    return await self._frame.fill(
+..\..\AppData\Local\Python\pythoncore-3.15-64\Lib\site-packages\playwright\_impl\frame.py:736: in fill
+    return await self._channel.fill(
+..\..\AppData\Local\Python\pythoncore-3.15-64\Lib\site-packages\playwright\_impl\channel_owner.py:387: in finish
+    raise e from None
+..\..\AppData\Local\Python\pythoncore-3.15-64\Lib\site-packages\playwright\_impl\channel_owner.py:352: in finish
+    result = await zone.run_async(lambda: awaitable)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = &lt;playwright._impl.utils.zones.Zone object at 0x0000025A4C596E00&gt;
+func = &lt;function ChannelOwner._wrap_api_call.&lt;locals&gt;.finish.&lt;locals&gt;.&lt;lambda&gt; at 0x0000025A4C5DEDA0&gt;
+
+    async def run_async(self, func: Callable[[], Awaitable[R]]) -&gt; R:
+        # Python: run() of an async function. The coroutine runs when it is awaited,
+        # so the zone must be current while it is awaited, not while it is created.
+        token = _async_local_storage.set(self)
+        try:
+&gt;           return await func()
+                   ^^^^^^^^^^^^
+E           playwright._impl._errors.TargetClosedError: Locator.fill: Target page, context or browser has been closed
+E           Call log:
+E             - waiting for get_by_placeholder("What needs to be done?", exact=True)
+
+..\..\AppData\Local\Python\pythoncore-3.15-64\Lib\site-packages\playwright\_impl\utils\zones.py:58: TargetClosedError</failure></testcase><testcase time="0.079" /></testsuite></testsuites>
